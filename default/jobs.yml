@@ -65,7 +65,7 @@ Okta-API:
           value: "`${new Date((latest * 1000 || Date.now())).toISOString()}`"
       collectRequestHeaders:
         - name: Authorization
-          value: changeme
+          value: SSWS REPLACE_OKTA_BEARER_TOKEN
     destructive: false
     type: rest
   input:
@@ -84,89 +84,3 @@ Okta-API:
   description: "This is a source inside a pack. There is a __packsource field set
     to 'okta-rest-api.okta-api'. This will ensure the data coming from this
     collector will reach the correct pipeline from this pack's route. "
-Okta-API-CLONE:
-  type: collection
-  ttl: 4h
-  ignoreGroupJobsLimit: false
-  removeFields: []
-  resumeOnBoot: false
-  schedule:
-    cronSchedule: "* * * * *"
-    maxConcurrentRuns: 1
-    skippable: true
-    run:
-      rescheduleDroppedTasks: true
-      maxTaskReschedule: 1
-      logLevel: debug
-      jobTimeout: 60m
-      mode: run
-      timeRangeType: relative
-      timeWarning: {}
-      expression: "true"
-      minTaskSize: 1MB
-      maxTaskSize: 10MB
-      stateTracking:
-        stateUpdateExpression: "__timestampExtracted !== false && {latestTime:
-          (state.latestTime || 0) > _time ? state.latestTime : _time}"
-        stateMergeExpression: "(prevState.latestTime || 0) > newState.latestTime ?
-          prevState : newState"
-        enabled: true
-    enabled: false
-  streamtags: []
-  workerAffinity: false
-  collector:
-    conf:
-      discovery:
-        discoverType: none
-      collectMethod: get
-      pagination:
-        type: response_header_link
-        nextRelationAttribute: next
-        maxPages: 0
-        curRelationAttribute: self
-      authentication: none
-      timeout: 0
-      useRoundRobinDns: false
-      disableTimeFilter: false
-      decodeUrl: true
-      rejectUnauthorized: false
-      captureHeaders: false
-      safeHeaders: []
-      retryRules:
-        type: backoff
-        interval: 1000
-        limit: 5
-        multiplier: 2
-        maxIntervalMs: 20000
-        codes:
-          - 429
-          - 503
-        enableHeader: true
-        retryConnectTimeout: false
-        retryConnectReset: false
-        retryHeaderName: retry-after
-      __scheduling:
-        stateTracking: {}
-      collectUrl: "'https://integrator-5660687.okta.com/api/v1/logs'"
-      collectRequestParams:
-        - name: since
-          value: "`${new Date((earliest * 1000 ||
-            Date.now()-(7*24*60*60*1000))).toISOString()}`"
-        - name: until
-          value: "`${new Date((latest * 1000 || Date.now())).toISOString()}`"
-      collectRequestHeaders:
-        - name: Authorization
-          value: changeme
-    destructive: false
-    type: rest
-  input:
-    type: collection
-    staleChannelFlushMs: 10000
-    sendToRoutes: true
-    preprocess:
-      disabled: true
-    throttleRatePerSec: "0"
-    breakerRulesets:
-      - Okta-API
-  savedState: {}
-  notifications: []
