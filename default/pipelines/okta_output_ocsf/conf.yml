@@ -1,0 +1,1323 @@
+output: default
+streamtags: []
+groups:
+  YN1gr2:
+    name: Group Management (3006)
+    description: OCSF Category Group Management (3006)
+    index: 3
+  S6d0AF:
+    name: Authorize Session (3003)
+    description: OCSF Category Authorize Session (3003)
+    index: 4
+  ejxqYo:
+    name: Authentication (3002)
+    description: OCSF Category Authentication (3002)
+    index: 5
+  MshXkn:
+    name: Entity Management (3004)
+    description: OCSF Category Entity Managment (3004)
+    index: 6
+  pOOd1U:
+    name: Account Change (3001)
+    description: OCSF Category Account Change (3001)
+    index: 7
+  tFAEAA:
+    name: API Activity (6003)
+    description: OCSF Category API Activity (6003)
+    index: 8
+  hlJuDn:
+    name: Detection Finding (2004)
+    description: OCSF Category Detection Finding (2004)
+    index: 9
+asyncFuncTimeout: 1000
+functions:
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: This formatting pipeline maps the system logs to the proper OSCF
+        category. Categories for individual event types can be adjusted by
+        modifying the okta_event_types.csv lookup.
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: For additional details, see this pack's README under Settings.
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: "Author: Cribl Packs Team"
+  - id: eval
+    filter: __ocsf_category == 3006
+    disabled: false
+    conf:
+      add:
+        - disabled: false
+          name: time
+          value: new Date(published).toISOString()
+        - disabled: false
+          name: user
+          value: "{}"
+        - disabled: false
+          name: user.uid
+          value: "target[0].type == 'User' ? target[0].id : target[1].type == 'User' ?
+            target[1].id : null"
+        - disabled: false
+          name: user.name
+          value: "target[0].type == 'User' ? target[0].displayName : target[1].type ==
+            'User' ? target[1].displayName : null"
+        - disabled: false
+          name: user.type
+          value: "target[0].type == 'User' ? target[0].type : target[1].type == 'User' ?
+            target[1].type : null"
+        - disabled: false
+          name: actorTmp
+          value: actor
+        - disabled: false
+          name: actor
+          value: "{}"
+        - disabled: false
+          name: actor.user
+          value: "{}"
+        - disabled: false
+          name: actor.user.uid
+          value: actorTmp.id
+        - disabled: false
+          name: actor.user.name
+          value: actorTmp.displayName
+        - disabled: false
+          name: actor.user.email_addr
+          value: actorTmp.alternateId
+        - disabled: false
+          name: actor.session
+          value: "{}"
+        - disabled: false
+          name: actor.session.uid
+          value: authenticationContext.externalSessionId
+        - disabled: false
+          name: group
+          value: "{}"
+        - disabled: false
+          name: group.uid
+          value: "target[0].type == 'UserGroup' ? target[0].id : target[1].type ==
+            'UserGroup' ? target[1].id : null"
+        - disabled: false
+          name: group.name
+          value: "target[0].type == 'UserGroup' ? target[0].displayName : target[1].type
+            == 'UserGroup' ? target[1].displayName : null"
+        - disabled: false
+          name: group.type
+          value: "target[0].type == 'UserGroup' ? target[0].type : target[1].type ==
+            'UserGroup' ? target[1].type : null"
+        - disabled: false
+          name: status
+          value: outcome.result
+        - disabled: false
+          name: message
+          value: displayMessage
+        - disabled: false
+          name: metadata
+          value: "{}"
+        - disabled: false
+          name: metadata.uid
+          value: uuid
+        - disabled: false
+          name: metadata.product
+          value: "{}"
+        - disabled: false
+          name: category_uid
+          value: "3"
+        - disabled: false
+          name: metadata.product.name
+          value: "'Okta System Log'"
+        - disabled: false
+          name: metadata.product.version
+          value: version
+        - disabled: false
+          name: metadata.product.vendor_name
+          value: "'Okta'"
+        - disabled: false
+          name: metadata.version
+          value: "'1.3.0'"
+        - disabled: false
+          name: metadata.profiles
+          value: "['datetime','host']"
+        - disabled: false
+          name: metadata.event_code
+          value: eventType
+        - disabled: false
+          name: class_uid
+          value: "3006"
+        - disabled: false
+          name: status_id
+          value: "outcome.result == 'SUCCESS' ? 1 : outcome.result == 'FAILURE' ? 2 : 0"
+        - disabled: false
+          name: activity_id
+          value: "eventType.includes('add') ? 1 : eventType.includes('update') ? 2 :
+            eventType.includes('remove') ? 3 : 99"
+        - disabled: false
+          name: severity_id
+          value: "1"
+        - disabled: false
+          name: http_request
+          value: "{}"
+        - disabled: false
+          name: http_request.uid
+          value: debugContext.debugData.requestId
+        - disabled: false
+          name: http_request.url
+          value: "{}"
+        - disabled: false
+          name: http_request.url.path
+          value: debugContext.debugData.url
+        - disabled: false
+          name: http_request.user_agent
+          value: client.userAgent.rawUserAgent
+        - disabled: false
+          name: src_endpoint
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.ip
+          value: client.ipAddress
+        - disabled: false
+          name: src_endpoint.os
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.os.name
+          value: client.userAgent.os
+        - disabled: false
+          name: src_endpoint.os.type_id
+          value: "client.userAgent.os == 'Mac OS X' ? 1 : client.userAgent.os == 'Windows'
+            ? 2 : client.userAgent.os == 'Linux' ? 3 : 0"
+        - disabled: false
+          name: src_endpoint.type
+          value: client.device
+        - disabled: false
+          name: src_endpoint.domain
+          value: securityContext.domain
+        - disabled: false
+          name: src_endpoint.location
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.location.isp
+          value: securityContext.isp
+        - disabled: false
+          name: src_endpoint.location.lat
+          value: client.geographicalContext.geolocation.lat
+        - disabled: false
+          name: src_endpoint.location.city
+          value: client.geographicalContext.city
+        - disabled: false
+          name: src_endpoint.location.long
+          value: client.geographicalContext.geolocation.lon
+        - disabled: false
+          name: src_endpoint.location.country
+          value: client.geographicalContext.country
+        - disabled: false
+          name: src_endpoint.location.postal_code
+          value: client.geographicalContext.postalCode
+        - disabled: false
+          name: src_endpoint. autonomous_system
+          value: "{}"
+        - disabled: false
+          name: src_endpoint. autonomous_system.name
+          value: securityContext.asOrg
+        - disabled: false
+          name: src_endpoint. autonomous_system.number
+          value: securityContext.asNumber
+      remove:
+        - actorTmp*
+        - "*"
+      keep:
+        - metadata*
+        - category_uid
+        - src_endpoint*
+        - message
+        - actor.*
+        - status_id
+        - class_uid
+        - activity_id
+        - http_request*
+        - time
+        - severity_id
+        - user*
+        - group*
+        - status
+        - _time
+        - source
+    groupId: YN1gr2
+    description: Mapping fields for Group Management (3006) OCSF Category
+  - id: eval
+    filter: __ocsf_category == 3003
+    disabled: null
+    conf:
+      add:
+        - disabled: false
+          name: time
+          value: new Date(published).toISOString()
+        - disabled: false
+          name: actorTmp
+          value: actor
+        - disabled: false
+          name: actor
+          value: "{}"
+        - disabled: false
+          name: actor.user
+          value: "{}"
+        - disabled: false
+          name: actor.user.uid
+          value: actorTmp.id
+        - disabled: false
+          name: actor.user.name
+          value: actorTmp.displayName
+        - disabled: false
+          name: actor.user.type_id
+          value: "actorTmp.type == 'User' ? 1 : 0"
+        - disabled: false
+          name: actor.user.email_addr
+          value: actorTmp.alternateId
+        - disabled: false
+          name: actor.session
+          value: "{}"
+        - disabled: false
+          name: actor.session.uid
+          value: authenticationContext.externalSessionId
+        - disabled: false
+          name: actor.session.issuer
+          value: authenticationContext.issuer.id
+        - disabled: false
+          name: device
+          value: "{}"
+        - disabled: false
+          name: device.uid
+          value: device.id
+        - disabled: false
+          name: device.name
+          value: device.name
+        - disabled: false
+          name: device.type_id
+          value: "device.os_platform == 'OSX' ? 1 : device.os_platform == 'Windows' ? 2 :
+            device.os_platform == 'Linux' ? 3 : 0"
+        - disabled: false
+          name: status
+          value: outcome.result
+        - disabled: false
+          name: message
+          value: displayMessage
+        - disabled: false
+          name: metadata
+          value: "{}"
+        - disabled: false
+          name: metadata.uid
+          value: uuid
+        - disabled: false
+          name: metadata.product
+          value: "{}"
+        - disabled: false
+          name: metadata.product.name
+          value: "'Okta System Log'"
+        - disabled: false
+          name: metadata.product.version
+          value: version
+        - disabled: false
+          name: metadata.product.vendor_name
+          value: "'Okta'"
+        - disabled: false
+          name: metadata.version
+          value: "'1.3.0'"
+        - disabled: false
+          name: metadata.profiles
+          value: "['datetime','host']"
+        - disabled: false
+          name: metadata.event_code
+          value: eventType
+        - disabled: false
+          name: class_uid
+          value: "3003"
+        - disabled: false
+          name: status_id
+          value: "outcome.result == 'SUCCESS' ? 1 : outcome.result == 'FAILURE' ? 2 : 3"
+        - disabled: false
+          name: activity_id
+          value: "eventType.includes('impersonation.grant') ? 1 : 99"
+        - disabled: false
+          name: severity_id
+          value: "1"
+        - disabled: false
+          name: category_uid
+          value: "3"
+        - disabled: false
+          name: dst_endpoint
+          value: "{}"
+        - disabled: false
+          name: dst_endpoint.svc_name
+          value: debugContext.debugData.url
+        - disabled: false
+          name: http_request
+          value: "{}"
+        - disabled: false
+          name: http_request.uid
+          value: debugContext.debugData.requestId
+        - disabled: false
+          name: http_request.user_agent
+          value: debugContext.debugData.rawUserAgent
+        - disabled: false
+          name: src_endpoint
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.ip
+          value: client.ipAddress
+        - disabled: false
+          name: src_endpoint.os
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.os.name
+          value: client.userAgent.os
+        - disabled: false
+          name: src_endpoint.os.type_id
+          value: "client.userAgent.os == 'MAC OS X' ? 1 : client.userAgent.os == 'WINDOWS'
+            ? 2 : client.userAgent.os == 'LINUX' ? 3 : 0"
+        - disabled: false
+          name: src_endpoint.type
+          value: client.device
+        - disabled: false
+          name: src_endpoint.domain
+          value: securityContext.domain
+        - disabled: false
+          name: src_endpoint.location
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.location.isp
+          value: securityContext.isp
+        - disabled: false
+          name: src_endpoint.location.lat
+          value: client.geographicalContext.geolocation.lat
+        - disabled: false
+          name: src_endpoint.location.city
+          value: client.geographicalContext.geolocation.city
+        - disabled: false
+          name: src_endpoint.location.long
+          value: client.geographicalContext.geolocation.lon
+        - disabled: false
+          name: src_endpoint.location.country
+          value: client.geographicalContext.geolocation.country
+        - disabled: false
+          name: src_endpoint.location.postal_code
+          value: client.geographicalContext.geolocation.postalCode
+        - disabled: false
+          name: src_endpoint.autonomous_system
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.autonomous_system.name
+          value: securityContext.asOrg
+        - disabled: false
+          name: src_endpoint.autonomous_system.number
+          value: securityContext.asNumber
+      remove:
+        - actorTmp*
+        - "*"
+      keep:
+        - time
+        - actor*
+        - device*
+        - status
+        - message
+        - metadata*
+        - class_uid
+        - status_id
+        - activity_id
+        - severity_id
+        - category_uid
+        - dst_endpoint*
+        - http_request*
+        - src_endpoint*
+        - _time
+        - source
+    groupId: S6d0AF
+    description: Mapping fields for Authorize Session (3003) OCSF Category
+  - id: eval
+    filter: __ocsf_category == 3002
+    disabled: false
+    conf:
+      add:
+        - disabled: false
+          name: time
+          value: new Date(published).toISOString()
+        - disabled: false
+          name: actorTmp
+          value: actor
+        - disabled: false
+          name: actor
+          value: "{}"
+        - disabled: false
+          name: actor.user
+          value: "{}"
+        - disabled: false
+          name: actor.user.uid
+          value: actorTmp.id
+        - disabled: false
+          name: actor.user.name
+          value: actorTmp.displayName
+        - disabled: false
+          name: actor.user.type
+          value: "actorTmp.type == 'User' ? 'User' : actorTmp.type == 'Admin' ? 'Admin' :
+            'Unknown'"
+        - disabled: false
+          name: actor.user.type_id
+          value: "actorTmp.type == 'User' ? 1 : actorTmp.type == 'Admin' ? 2 : 0"
+        - disabled: false
+          name: actor.user.email_addr
+          value: actorTmp.alternateId
+        - disabled: false
+          name: actor.session
+          value: "{}"
+        - disabled: false
+          name: actor.session.uid
+          value: authenticationContext.externalSessionId
+        - disabled: false
+          name: actor.session.issuer
+          value: authenticationContext.issuer.id
+        - disabled: false
+          name: status
+          value: outcome.result
+        - disabled: false
+          name: message
+          value: displayMessage
+        - disabled: false
+          name: metadata
+          value: "{}"
+        - disabled: false
+          name: metadata.uid
+          value: uuid
+        - disabled: false
+          name: metadata.product
+          value: "{}"
+        - disabled: false
+          name: metadata.product.name
+          value: "'Okta System Log'"
+        - disabled: false
+          name: metadata.product.version
+          value: version
+        - disabled: false
+          name: metadata.product.vendor_name
+          value: "'Okta'"
+        - disabled: false
+          name: metadata.version
+          value: "'1.3.0'"
+        - disabled: false
+          name: metadata.profiles
+          value: "['datetime', 'host']"
+        - disabled: false
+          name: metadata.event_code
+          value: eventType
+        - disabled: false
+          name: type_uid
+          value: "300201"
+        - disabled: false
+          name: class_uid
+          value: "3002"
+        - disabled: false
+          name: status_id
+          value: "outcome.result == 'SUCCESS' ? 1 : outcome.result == 'FAILURE' ? 2 : 99"
+        - disabled: false
+          name: logon_type
+          value: "transaction.type == 'WEB' ? 'Interactive' : transaction.type == 'API' ?
+            'Remote' : 'Unknown'"
+        - disabled: false
+          name: activity_id
+          value: "eventType == 'user.session.start' ? 1 : eventType == 'user.session.end'
+            ? 2 : 99"
+        - disabled: false
+          name: severity_id
+          value: "1"
+        - disabled: false
+          name: category_uid
+          value: "3"
+        - disabled: false
+          name: dst_endpoint
+          value: "{}"
+        - disabled: false
+          name: dst_endpoint.svc_name
+          value: debugContext.debugData.url
+        - disabled: false
+          name: http_request
+          value: "{}"
+        - disabled: false
+          name: http_request.uid
+          value: debugContext.debugData.requestId
+        - disabled: false
+          name: http_request.user_agent
+          value: client.userAgent.rawUserAgent
+        - disabled: false
+          name: src_endpoint
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.ip
+          value: client.ipAddress
+        - disabled: false
+          name: src_endpoint.os
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.os.name
+          value: client.userAgent.os
+        - disabled: false
+          name: src_endpoint.os.type_id
+          value: "client.userAgent.os == 'MAC OS X' ? 1 : client.userAgent.os == 'WINDOWS'
+            ? 2 : client.userAgent.os == 'LINUX' ? 3 : 0"
+        - disabled: false
+          name: src_endpoint.type
+          value: client.device
+        - disabled: false
+          name: src_endpoint.domain
+          value: securityContext.domain
+        - disabled: false
+          name: src_endpoint.location
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.location.isp
+          value: securityContext.isp
+        - disabled: false
+          name: src_endpoint.location.lat
+          value: client.geographicalContext.geolocation.lat
+        - disabled: false
+          name: src_endpoint.location.city
+          value: client.geographicalContext.city
+        - disabled: false
+          name: src_endpoint.location.long
+          value: client.geographicalContext.geolocation.lon
+        - disabled: false
+          name: src_endpoint.location.country
+          value: client.geographicalContext.country
+        - disabled: false
+          name: src_endpoint.location.postal_code
+          value: client.geographicalContext.postalCode
+        - disabled: false
+          name: src_endpoint.autonomous_system
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.autonomous_system
+          value: securityContext.asOrg
+        - disabled: false
+          name: src_endpoint.autonomous_system
+          value: securityContext.asNumber
+        - disabled: false
+          name: activity_name
+          value: "eventType == 'user.session.start' ? 'Logon' : eventType ==
+            'user.session.end' ? 'Logoff' : 'Other'"
+        - disabled: false
+          name: logon_type_id
+          value: "transaction.type == 'WEB' ? 1 : transaction.type == 'API' ? 2 : 0"
+      remove:
+        - actorTmp*
+        - "*"
+      keep:
+        - time
+        - actor.*
+        - status
+        - message
+        - metadata*
+        - type_uid
+        - class_uid
+        - status_id
+        - logon_type
+        - activity_id
+        - severity_id
+        - category_uid
+        - dst_endpoint*
+        - http_request*
+        - src_endpoint*
+        - activity_name
+        - logon_type_id
+        - source
+        - _time
+    groupId: ejxqYo
+    description: Mapping fields for Authentication (3002) OCSF Category
+  - id: eval
+    filter: __ocsf_category == 3004
+    disabled: false
+    conf:
+      add:
+        - disabled: false
+          name: time
+          value: new Date(published).toISOString()
+        - disabled: false
+          name: actorTmp
+          value: actor
+        - disabled: false
+          name: actor
+          value: "{}"
+        - disabled: false
+          name: actor.user
+          value: "{}"
+        - disabled: false
+          name: actor.user.uid
+          value: actorTmp.id
+        - disabled: false
+          name: actor.user.name
+          value: actorTmp.displayName
+        - disabled: false
+          name: actor.user.email_addr
+          value: actorTmp.alternateId
+        - disabled: false
+          name: actor.session
+          value: "{}"
+        - disabled: false
+          name: actor.session.uid
+          value: authenticationContext.externalSessionId
+        - disabled: false
+          name: entity
+          value: "{}"
+        - disabled: false
+          name: entity.type
+          value: target[0].type
+        - disabled: false
+          name: entity.policy
+          value: "{}"
+        - disabled: false
+          name: entity.policy.uid
+          value: target[0].id
+        - disabled: false
+          name: entity.policy.name
+          value: target[0].displayName
+        - disabled: false
+          name: entity.type_id
+          value: "target[0] == 'PolicyEntity' ? 1 : 99"
+        - disabled: false
+          name: status
+          value: outcome.result
+        - disabled: false
+          name: message
+          value: displayMessage
+        - disabled: false
+          name: metadata
+          value: "{}"
+        - disabled: false
+          name: metadata.uid
+          value: uuid
+        - disabled: false
+          name: metadata.product
+          value: "{}"
+        - disabled: false
+          name: metadata.product.name
+          value: "'Okta System Log'"
+        - disabled: false
+          name: metadata.product.version
+          value: version
+        - disabled: false
+          name: metadata.product.vendor_name
+          value: "'Okta'"
+        - disabled: false
+          name: metadata.version
+          value: "'1.3.0'"
+        - disabled: false
+          name: metadata.profiles
+          value: "['datetime','host']"
+        - disabled: false
+          name: metadata.event_code
+          value: eventType
+        - disabled: false
+          name: class_uid
+          value: "3004"
+        - disabled: false
+          name: status_id
+          value: "outcome.result == 'SUCCESS' ? 1 : outcome.result == 'FAILURE' ? 2 : 99"
+        - disabled: false
+          name: activity_id
+          value: "eventType.includes('create') ? 1 : eventType.includes('update') ? 2 :
+            eventType.includes('delete') ? 3 : 99"
+        - disabled: false
+          name: severity_id
+          value: "1"
+        - disabled: false
+          name: category_uid
+          value: "3"
+        - disabled: false
+          name: http_request
+          value: "{}"
+        - disabled: false
+          name: http_request.uid
+          value: debugContext.debugData.requestId
+        - disabled: false
+          name: http_request.url
+          value: "{}"
+        - disabled: false
+          name: http_request.url.path
+          value: debugContext.debugData.url
+        - disabled: false
+          name: http_request.user_agent
+          value: client.userAgent.rawUserAgent
+        - disabled: false
+          name: src_endpoint
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.ip
+          value: client.ipAddress
+        - disabled: false
+          name: src_endpoint.os
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.os.name
+          value: client.userAgent.os
+        - disabled: false
+          name: src_endpoint.os.type_id
+          value: "client.userAgent.os == 'MAC OS X' ? 1 : client.userAgent.os == 'WINDOWS'
+            ? 2 : client.userAgent.os == 'LINUX' ? 3 : 0"
+        - disabled: false
+          name: src_endpoint.type
+          value: client.device
+        - disabled: false
+          name: src_endpoint.location
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.location.isp
+          value: securityContext.isp
+        - disabled: false
+          name: src_endpoint.location.lat
+          value: client.geographicalContext.geolocation.lat
+        - disabled: false
+          name: src_endpoint.location.city
+          value: client.geographicalContext.geolocation.city
+        - disabled: false
+          name: src_endpoint.location.long
+          value: client.geographicalContext.geolocation.lon
+        - disabled: false
+          name: src_endpoint.location.country
+          value: client.geographicalContext.geolocation.country
+        - disabled: false
+          name: src_endpoint.location.postal_code
+          value: client.geographicalContext.geolocation.postalCode
+        - disabled: false
+          name: src_endpoint.autonomous_system
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.autonomous_system.name
+          value: securityContext.asOrg
+        - disabled: false
+          name: src_endpoint.autonomous_system.number
+          value: securityContext.asNumber
+      remove:
+        - actorTmp*
+        - "*"
+      keep:
+        - time
+        - actor.*
+        - entity*
+        - status
+        - message
+        - metadata*
+        - class_uid
+        - status_id
+        - activity_id
+        - severity_id
+        - category_uid
+        - http_request*
+        - src_endpoint*
+        - _time
+        - source
+    groupId: MshXkn
+    description: Mapping fields for Entity Management (3004) OCSF Category
+  - id: eval
+    filter: __ocsf_category == 3001
+    disabled: null
+    conf:
+      add:
+        - disabled: false
+          name: time
+          value: new Date(published).toISOString()
+        - disabled: false
+          name: actorTmp
+          value: actor
+        - disabled: false
+          name: actor
+          value: "{}"
+        - disabled: false
+          name: actor.user
+          value: "{}"
+        - disabled: false
+          name: actor.user.uid
+          value: actorTmp.id
+        - disabled: false
+          name: actor.user.name
+          value: actorTmp.displayName
+        - disabled: false
+          name: actor.user.type_id
+          value: "actorTmp.type == 'User' ? 1 : actorTmp.type == 'Admin' ? 2 : 0"
+        - disabled: false
+          name: actor.user.email_addr
+          value: actorTmp.alternateId
+        - disabled: false
+          name: actor.session
+          value: "{}"
+        - disabled: false
+          name: actor.session.uid
+          value: authenticationContext.externalSessionId
+        - disabled: false
+          name: status
+          value: outcome.result
+        - disabled: false
+          name: message
+          value: displayMessage
+        - disabled: false
+          name: metadata
+          value: "{}"
+        - disabled: false
+          name: metadata.uid
+          value: uuid
+        - disabled: false
+          name: metadata.product
+          value: "{}"
+        - disabled: false
+          name: metadata.product.name
+          value: "'Okta System Log'"
+        - disabled: false
+          name: metadata.product.version
+          value: version
+        - disabled: false
+          name: metadata.product.vendor_name
+          value: "'Okta'"
+        - disabled: false
+          name: metadata.version
+          value: "'1.3.0'"
+        - disabled: false
+          name: metadata.profiles
+          value: "['datetime','host']"
+        - disabled: false
+          name: metadata.event_code
+          value: eventType
+        - disabled: false
+          name: class_uid
+          value: "3001"
+        - disabled: false
+          name: status_id
+          value: "outcome.result == 'SUCCESS' ? 1 : outcome.result == 'FAILURE' ? 2 : 0"
+        - disabled: false
+          name: activity_id
+          value: "eventType.includes('lock') ? 4 : eventType.includes('create') ? 1 :
+            eventType.includes('update') ? 2 : eventType.includes('delete') ? 3
+            : 99"
+        - disabled: false
+          name: severity_id
+          value: "1"
+        - disabled: false
+          name: category_uid
+          value: "3"
+        - disabled: false
+          name: http_request
+          value: "{}"
+        - disabled: false
+          name: http_request.uid
+          value: debugContext.debugData.requestId
+        - disabled: false
+          name: http_request.url
+          value: "{}"
+        - disabled: false
+          name: http_request.url.path
+          value: |
+            debugContext.debugData.url
+        - disabled: false
+          name: http_request.user_agent
+          value: client.userAgent.rawUserAgent
+        - disabled: false
+          name: src_endpoint
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.ip
+          value: client.ipAddress
+        - disabled: false
+          name: src_endpoint.os
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.os.name
+          value: client.userAgent.os
+        - disabled: false
+          name: src_endpoint.os.type_id
+          value: "client.userAgent.os == 'ANDROID' ? 1 : client.userAgent.os == 'IOS' ? 2
+            : client.userAgent.os == 'WINDOWS' ? 3 : client.userAgent.os ==
+            'LINUX' ? 4 : client.userAgent.os == 'MACOS' ? 5 : 0"
+        - disabled: false
+          name: src_endpoint.type
+          value: client.device
+        - disabled: false
+          name: src_endpoint.domain
+          value: securityContext.domain
+        - disabled: false
+          name: src_endpoint.location
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.location.isp
+          value: securityContext.isp
+        - disabled: false
+          name: src_endpoint.location.lat
+          value: client.geographicalContext.geolocation.lat
+        - disabled: false
+          name: src_endpoint.location.city
+          value: client.geographicalContext.city
+        - disabled: false
+          name: src_endpoint.location.long
+          value: client.geographicalContext.geolocation.lon
+        - disabled: false
+          name: src_endpoint.location.country
+          value: client.geographicalContext.country
+        - disabled: false
+          name: src_endpoint.location.postal_code
+          value: client.geographicalContext.postalCode
+        - disabled: false
+          name: src_endpoint.autonomous_system
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.autonomous_system.name
+          value: securityContext.asOrg
+        - disabled: false
+          name: src_endpoint.autonomous_system.number
+          value: securityContext.asNumber
+        - disabled: false
+          name: activity_name
+          value: eventType
+      keep:
+        - time
+        - actor.*
+        - status
+        - message
+        - metadata*
+        - class_uid
+        - status_id
+        - activity_id
+        - severity_id
+        - category_uid
+        - http_request*
+        - src_endpoint*
+        - activity_name
+      remove:
+        - actorTmp*
+        - "*"
+    groupId: pOOd1U
+    description: Mapping fields for Account Change (3001) OCSF Category
+  - id: eval
+    filter: __ocsf_category == 6003
+    disabled: null
+    conf:
+      add:
+        - disabled: false
+          name: api
+          value: "{}"
+        - disabled: false
+          name: api.service
+          value: "{}"
+        - disabled: false
+          name: api.service.name
+          value: "'Okta API'"
+        - disabled: false
+          name: api.operation
+          value: eventType
+        - disabled: false
+          name: time
+          value: new Date(published).toISOString()
+        - disabled: false
+          name: actorTmp
+          value: actor
+        - disabled: false
+          name: actor
+          value: "{}"
+        - disabled: false
+          name: actor.user
+          value: "{}"
+        - disabled: false
+          name: actor.user.uid
+          value: actorTmp.id
+        - disabled: false
+          name: actor.user.name
+          value: actorTmp.displayName
+        - disabled: false
+          name: actor.user.email_addr
+          value: actorTmp.alternateId
+        - disabled: false
+          name: actor.session
+          value: "{}"
+        - disabled: false
+          name: actor.session.uid
+          value: authenticationContext.externalSessionId
+        - disabled: false
+          name: actor.session.issuer
+          value: authenticationContext.issuer.id
+        - disabled: false
+          name: status
+          value: outcome.result
+        - disabled: false
+          name: message
+          value: displayMessage
+        - disabled: false
+          name: metadata
+          value: "{}"
+        - disabled: false
+          name: metadata.uid
+          value: uuid
+        - disabled: false
+          name: metadata.product
+          value: "{}"
+        - disabled: false
+          name: metadata.product.name
+          value: "'Okta System Log'"
+        - disabled: false
+          name: metadata.product.version
+          value: version
+        - disabled: false
+          name: metadata.product.vendor_name
+          value: "'Okta'"
+        - disabled: false
+          name: metadata.version
+          value: "'1.3.0'"
+        - disabled: false
+          name: metadata.profiles
+          value: "['datetime','host']"
+        - disabled: false
+          name: metadata.event_code
+          value: eventType
+        - disabled: false
+          name: class_uid
+          value: "6003"
+        - disabled: false
+          name: status_id
+          value: "outcome.result == 'SUCCESS' ? 1 : outcome.result == 'FAILURE' ? 2 : 0"
+        - disabled: false
+          name: activity_id
+          value: "eventType.includes('create') ? 1 : eventType.includes('read') ? 2 :
+            eventType.includes('update') ? 3 : eventType.includes('delete') ? 4
+            : 99"
+        - disabled: false
+          name: severity_id
+          value: "1"
+        - disabled: false
+          name: category_uid
+          value: "6"
+        - disabled: false
+          name: http_request
+          value: "{}"
+        - disabled: false
+          name: http_request.uid
+          value: debugContext.debugData.requestId
+        - disabled: false
+          name: http_request.url
+          value: "{}"
+        - disabled: false
+          name: http_request.url.path
+          value: |
+            debugContext.debugData.url
+        - disabled: false
+          name: http_request.user_agent
+          value: client.userAgent.rawUserAgent
+        - disabled: false
+          name: src_endpoint
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.ip
+          value: client.ipAddress
+        - disabled: false
+          name: src_endpoint.os
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.os.name
+          value: client.userAgent.os
+        - disabled: false
+          name: src_endpoint.os.type_id
+          value: "client.userAgent.os == 'Mac OS X' ? 1 : client.userAgent.os == 'Windows'
+            ? 2 : client.userAgent.os == 'Linux' ? 3 : 0"
+        - disabled: false
+          name: src_endpoint.type
+          value: client.device
+        - disabled: false
+          name: src_endpoint.domain
+          value: securityContext.domain
+        - disabled: false
+          name: src_endpoint.location
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.location.isp
+          value: securityContext.isp
+        - disabled: false
+          name: src_endpoint.location.lat
+          value: client.geographicalContext.geolocation.lat
+        - disabled: false
+          name: src_endpoint.location.city
+          value: client.geographicalContext.city
+        - disabled: false
+          name: src_endpoint.location.long
+          value: client.geographicalContext.geolocation.lon
+        - disabled: false
+          name: src_endpoint.location.country
+          value: client.geographicalContext.country
+        - disabled: false
+          name: src_endpoint.location.postal_code
+          value: client.geographicalContext.postalCode
+        - disabled: false
+          name: src_endpoint.autonomous_system
+          value: "{}"
+        - disabled: false
+          name: src_endpoint.autonomous_system.name
+          value: securityContext.asOrg
+        - disabled: false
+          name: src_endpoint.autonomous_system.number
+          value: securityContext.asNumber
+      keep:
+        - api*
+        - time
+        - actor.*
+        - status
+        - message
+        - metadata*
+        - class_uid
+        - status_id
+        - activity_id
+        - severity_id
+        - category_uid
+        - http_request*
+        - src_endpoint*
+      remove:
+        - actorTmp*
+        - "*"
+    groupId: tFAEAA
+    description: Mapping fields for API Activity (6003) OCSF Category
+  - id: eval
+    filter: __ocsf_category == 2004
+    disabled: null
+    conf:
+      add:
+        - disabled: false
+          name: time
+          value: new Date(published).toISOString()
+        - disabled: false
+          name: message
+          value: displayMessage
+        - disabled: false
+          name: metadata
+          value: "{}"
+        - disabled: false
+          name: metadata.uid
+          value: uuid
+        - disabled: false
+          name: metadata.product
+          value: "{}"
+        - disabled: false
+          name: metadata.product.name
+          value: "'Okta System Log'"
+        - disabled: false
+          name: metadata.product.version
+          value: version
+        - disabled: false
+          name: metadata.product.vendor_name
+          value: "'Okta'"
+        - disabled: false
+          name: metadata.version
+          value: "'1.3.0'"
+        - disabled: false
+          name: metadata.profiles
+          value: "['datetime','host', 'security_control']"
+        - disabled: false
+          name: metadata.event_code
+          value: eventType
+        - disabled: false
+          name: action_id
+          value: "outcome.result == 'DENY' ? 2 : outcome.result == 'ALLOW' ? 1 : 0"
+        - disabled: false
+          name: class_uid
+          value: "3001"
+        - disabled: false
+          name: evidences
+          value: "{}"
+        - disabled: false
+          name: evidences.src_endpoint
+          value: "{}"
+        - disabled: false
+          name: evidences.src_endpoint.ip
+          value: client.ipAddress
+        - disabled: false
+          name: evidences.src_endpoint.os
+          value: "{}"
+        - disabled: false
+          name: evidences.src_endpoint.os.name
+          value: client.userAgent.os
+        - disabled: false
+          name: evidences.src_endpoint.os.type_id
+          value: "client.userAgent.os == 'Windows' ? 1 : client.userAgent.os == 'Mac OS' ?
+            2 : client.userAgent.os == 'Linux' ? 3 : 0"
+        - disabled: false
+          name: evidences.src_endpoint.type
+          value: client.device
+        - disabled: false
+          name: evidences.src_endpoint.domain
+          value: securityContext.domain
+        - disabled: false
+          name: evidences.src_endpoint.location
+          value: "{}"
+        - disabled: false
+          name: evidences.src_endpoint.location.isp
+          value: securityContext.isp
+        - disabled: false
+          name: evidences.src_endpoint.location.lat
+          value: client.geographicalContext.geolocation.lat
+        - disabled: false
+          name: evidences.src_endpoint.location.city
+          value: client.geographicalContext.city
+        - disabled: false
+          name: evidences.src_endpoint.location.long
+          value: client.geographicalContext.geolocation.lon
+        - disabled: false
+          name: evidences.src_endpoint.location.country
+          value: client.geographicalContext.country
+        - disabled: false
+          name: evidences.src_endpoint.location.postal_code
+          value: client.geographicalContext.postalCode
+        - disabled: false
+          name: evidences.src_endpoint.autonomous_system
+          value: "{}"
+        - disabled: false
+          name: evidences.src_endpoint.autonomous_system.name
+          value: securityContext.asOrg
+        - disabled: false
+          name: evidences.src_endpoint.autonomous_system.number
+          value: securityContext.asNumber
+        - disabled: false
+          name: resources
+          value: "[]"
+        - disabled: false
+          name: resources[0]
+          value: "{}"
+        - disabled: false
+          name: resources[0].name
+          value: debugContext.debugData.url
+        - disabled: false
+          name: severity_id
+          value: "1"
+        - disabled: false
+          name: category_uid
+          value: "2"
+        - disabled: false
+          name: finding_info
+          value: "{}"
+        - disabled: false
+          name: finding_info.uid
+          value: uuid
+        - disabled: false
+          name: finding_info.title
+          value: outcome.reason
+        - disabled: false
+          name: disposition_id
+          value: "outcome.result == 'DENY' ? 2 : outcome.result == 'ALLOW' ? 1 : 0"
+      keep:
+        - time
+        - message
+        - metadata*
+        - action_id
+        - class_uid
+        - evidences*
+        - resources*
+        - severity_id
+        - category_uid
+        - finding_info*
+        - disposition_id
+      remove:
+        - actorTmp*
+        - "*"
+    groupId: hlJuDn
+    description: Mapping fields for Detection Finding (2004) OCSF Category
+description: Chain pipeline to format the Okta events into the correct OCSF Schema

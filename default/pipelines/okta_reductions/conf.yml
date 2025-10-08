@@ -1,0 +1,108 @@
+output: default
+streamtags: []
+groups:
+  kBqahE:
+    name: Drop, Sample, or Suppress based on action specified in event types lookup
+    description: For changing, update the lookup unde knowledge > lookups. Modify
+      the okta-event-types.csv lookup.
+    index: 4
+  tjm9fl:
+    name: Remove all null values
+    description: Unpacks all nested JSON and removes null fields
+    index: 6
+asyncFuncTimeout: 1000
+functions:
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: This conditioning pipeline is used to house any reduction techniques
+        available for the data source.
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: For additional details, see this pack's README under Settings.
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: "Author: Cribl Packs Team"
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: >-
+        The following group works of the __action field and enacts the provided
+        action on the event. Adjusting the __action field comes from modifying
+        the okta_event_types.csv lookup. The following options are provided:
+
+
+        Drop: This will drop any event with this action set
+
+        Sample: Default value keeps 1 event out of 10, however can be adjusted for individual needs
+
+        Suppress: This action keys off of the eventType field in the event, default values keep 1 event per eventType per 30 second window.
+  - id: drop
+    filter: __action == 'drop'
+    disabled: null
+    conf: {}
+    groupId: kBqahE
+  - id: sampling
+    filter: __action == 'sample'
+    disabled: null
+    conf:
+      rules:
+        - filter: "true"
+          rate: 10
+    groupId: kBqahE
+  - id: suppress
+    filter: __action == 'suppress'
+    disabled: null
+    conf:
+      allow: 1
+      suppressPeriodSec: 30
+      dropEventsMode: true
+      maxCacheSize: 50000
+      cacheIdleTimeoutPeriods: 2
+      numEventsIdleTimeoutTrigger: 10000
+      keyExpr: eventType
+    groupId: kBqahE
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: The following reduction looks through the nested JSON and removes any
+        null value field that the original parser missed.
+  - id: serde
+    filter: "true"
+    disabled: null
+    conf:
+      mode: extract
+      type: json
+      srcField: actor
+      fieldFilterExpr: value !== '' && value !== null && value !== 'null'
+      dstField: actor
+    groupId: tjm9fl
+  - id: serde
+    filter: "true"
+    disabled: null
+    conf:
+      mode: extract
+      type: json
+      srcField: client
+      fieldFilterExpr: value !== '' && value !== null && value !== 'null'
+      dstField: client
+    groupId: tjm9fl
+  - id: serde
+    filter: "true"
+    disabled: false
+    conf:
+      mode: extract
+      type: json
+      srcField: transaction
+      dstField: transaction
+      fieldFilterExpr: value !== '' && value !== null && value !== 'null' &&
+        Object.keys(value).length !== 0
+    groupId: tjm9fl
+description: Optional Reduction Functions for Okta System logs

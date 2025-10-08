@@ -1,0 +1,32 @@
+id: default
+groups: {}
+comments:
+  - id: 3VLpSv
+    comment: Matches JSON events coming from collector
+    index: 0
+  - id: AreB1Q
+    comment: Something went wrong. We shouldn't be here
+    index: 2
+routes:
+  - id: LhZfAo
+    name: cribl_okta_rest_api
+    final: true
+    disabled: false
+    pipeline: okta
+    description: Okta System Logs from Rest API
+    enableOutputExpression: false
+    outputExpression: null
+    filter: __packsource == 'okta-rest-api.okta-api'
+    clones: []
+    output: default
+  - id: default
+    name: default
+    final: true
+    disabled: false
+    pipeline: devnull
+    description: ""
+    enableOutputExpression: false
+    outputExpression: null
+    filter: "true"
+    clones: []
+    output: devnull

@@ -1,0 +1,158 @@
+output: default
+streamtags:
+  - Okta
+  - JSON
+  - REST
+groups:
+  TOEqrf:
+    name: Initial Parsing and Timestamping
+    description: Parses the JSON object so that we can start working with the
+      fields, sets _time to the correct value
+    index: 3
+  VKDA3A:
+    name: (Optional) Event Reduction
+    description: Sends the events through a separate pipeline to apply common
+      reduction techniques.
+    index: 4
+  8tJjo5:
+    name: Outputs
+    description: Select the output required
+    index: 5
+asyncFuncTimeout: 1000
+functions:
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: >-
+        This conditioning pipeline is for use on the Okta Rest System log api
+        endpoint. The Pack will normalize the JSON data from the collector and
+        provide optional reduction techniques. 
+
+
+        Optional extended reduction can be achieved by modifying the okta-event-types.csv lookup. There is a column included in the lookup to handle the event types individually. The default value for the column is "keep" however the available options are "drop", "sample", or "suppress".
+
+
+        There are three current available output formats for the data: 
+            1. Standard JSON that is formatted and timestamp normalized. 
+            2. OCSF, Okta currently fits into 7 different OCSF categories which can be modified via okta-event-types.csv lookup.
+            3. Splunk, Index and sourcetype can be changed within the pipeline, however default values are set in Knowledge > Variables
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: For additional details, see this pack's README under Settings.
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: "Author: Cribl Packs Team"
+  - id: serde
+    filter: "true"
+    disabled: null
+    conf:
+      mode: extract
+      type: json
+      srcField: _raw
+      fieldFilterExpr: value !== '' && value !== null
+      remove: []
+    description: Unpack the JSON from _raw
+    groupId: TOEqrf
+  - id: auto_timestamp
+    filter: "true"
+    disabled: null
+    conf:
+      srcField: published
+      dstField: _time
+      defaultTimezone: UTC
+      timeExpression: time.getTime() / 1000
+      offset: 0
+      maxLen: 150
+      defaultTime: now
+      latestDateAllowed: +1week
+      earliestDateAllowed: -420weeks
+    groupId: TOEqrf
+    description: Setting _time to the correct value and timezone
+  - id: lookup
+    filter: "true"
+    disabled: null
+    conf:
+      dbLookup: false
+      matchMode: exact
+      reloadPeriodSec: -1
+      inFields:
+        - eventField: eventType
+          lookupField: EventType
+      addToEvent: false
+      ignoreCase: false
+      file: okta-event-types.csv
+      outFields:
+        - lookupField: ocsf_category
+          eventField: __ocsf_category
+        - lookupField: action
+          eventField: __action
+    groupId: TOEqrf
+    description: Extracting OCSF category and action from lookup
+  - id: chain
+    filter: "true"
+    disabled: null
+    conf:
+      processor: okta_reductions
+    description: (Optional) Common Reductions
+    groupId: VKDA3A
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: Output to OCSF (AWS Security Lake)
+    groupId: 8tJjo5
+  - id: chain
+    filter: "true"
+    disabled: true
+    conf:
+      processor: okta_output_ocsf
+    description: Structure the events to the proper OCSF categories
+    groupId: 8tJjo5
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: Output to Splunk
+    groupId: 8tJjo5
+  - id: serialize
+    filter: "true"
+    disabled: false
+    conf:
+      type: json
+      dstField: _raw
+      fields:
+        - "!_*"
+        - "!cribl*"
+        - "!source"
+        - "!host"
+        - "*"
+    groupId: 8tJjo5
+    description: Serialize JSON to _raw
+  - id: eval
+    filter: "true"
+    disabled: false
+    conf:
+      add:
+        - disabled: false
+          name: index
+          value: "index ? index : C.vars.default_splunk_index"
+        - disabled: false
+          name: sourcetype
+          value: "sourcetype ? sourcetype : C.vars.default_splunk_sourcetype"
+      keep:
+        - _*
+        - cribl*
+        - source
+        - host
+        - index
+        - sourcetype
+      remove:
+        - "*"
+    groupId: 8tJjo5
+    description: Sets the index and sourcetype for Splunk output
+description: Pipeline for parsing, formatting and filtering Okta Rest API events.

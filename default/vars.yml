@@ -1,0 +1,14 @@
+default_splunk_index:
+  type: string
+  lib: custom
+  value: "'okta'"
+  description: If using Splunk enter your splunk index here
+default_splunk_sourcetype:
+  type: string
+  lib: custom
+  value: "'OktaIM2:log'"
+  description: If using Splunk enter your sourcetype name here
+splunk_host:
+  type: string
+  lib: custom
+  value: '"http://YOUR_SPLUNK_HOST:8088/services/collector/event"'
