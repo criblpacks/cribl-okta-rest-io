@@ -65,7 +65,7 @@ Okta-API:
           value: "`${new Date((latest * 1000 || Date.now())).toISOString()}`"
       collectRequestHeaders:
         - name: Authorization
-          value: SSWS REPLACE_OKTA_BEARER_TOKEN
+          value: "'SSWS REPLACE_OKTA_BEARER_TOKEN'"
     destructive: false
     type: rest
   input:
