@@ -25,7 +25,7 @@ The Okta Rest IO pack ingests events from the Okta System Log API, normalizing t
 
 * To use a different Destination: You must update the pack's routes to specify your desired Destination.
 
-* For immediate functionality without requiring pack route filter expression modifications, every bundled Source within this pack adds a hidden field: __packsource==’okta-rest-api.okta-api’. This field allows for seamless routing based on the pack source.
+* For immediate functionality without requiring pack route filter expression modifications, every bundled Source within this pack adds a hidden field: __packsource==’cribl-okta-rest-io.okta-api’. This field allows for seamless routing based on the pack source.
 
 ### Source + Destination Configuration
 To use this pack as a completely bundled source and destination pack, follow these steps:

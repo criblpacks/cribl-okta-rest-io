@@ -79,8 +79,8 @@ Okta-API:
       - Okta-API
     metadata:
       - name: __packsource
-        value: "'okta-rest-api.okta-api'"
+        value: "'cribl-okta-rest-io.okta-api'"
   savedState: {}
   description: "This is a source inside a pack. There is a __packsource field set
-    to 'okta-rest-api.okta-api'. This will ensure the data coming from this
+    to 'cribl-okta-rest-io.okta-api'. This will ensure the data coming from this
     collector will reach the correct pipeline from this pack's route. "
