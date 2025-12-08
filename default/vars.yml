@@ -2,9 +2,17 @@ default_splunk_index:
   type: string
   lib: custom
   value: "'okta'"
-  description: If using Splunk enter your splunk index here
 default_splunk_sourcetype:
   type: string
   lib: custom
   value: "'OktaIM2:log'"
-  description: If using Splunk enter your sourcetype name here
+okta_domain:
+  type: string
+  lib: custom
+  value: "'YOUR_OKTA_DOMAIN'"
+  description: "REQUIRED: Your Okta domain"
+okta_token:
+  type: string
+  lib: custom
+  value: "'YOUR_OKTA_API_TOKEN'"
+  description: "REQUIRED: Your Okta API Token"

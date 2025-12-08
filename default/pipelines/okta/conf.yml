@@ -16,7 +16,7 @@ groups:
     index: 4
   8tJjo5:
     name: Outputs
-    description: Select the output required
+    description: Select the output required - but only one!
     index: 5
 asyncFuncTimeout: 1000
 functions:
@@ -121,7 +121,7 @@ functions:
     groupId: 8tJjo5
   - id: serialize
     filter: "true"
-    disabled: false
+    disabled: true
     conf:
       type: json
       dstField: _raw
@@ -135,7 +135,7 @@ functions:
     description: Serialize JSON to _raw
   - id: eval
     filter: "true"
-    disabled: false
+    disabled: true
     conf:
       add:
         - disabled: false
