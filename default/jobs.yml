@@ -71,7 +71,7 @@ in_okta_api:
           value: "`${new Date((latest * 1000 || Date.now())).toISOString()}`"
       collectRequestHeaders:
         - name: Authorization
-          value: "#42:WQn3KCyZMlWSEbb7x6t5N4ON78ts2fhNYBE3Pn6BK/fyxuEeHH5DjTg58/llUxrz"
+          value: "`SSWS ${C.vars['okta_token']}`"
     destructive: false
     type: rest
   input:
