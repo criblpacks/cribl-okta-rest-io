@@ -16,17 +16,17 @@ routes:
     description: Okta System Logs from Rest API
     enableOutputExpression: false
     outputExpression: null
-    filter: __packsource == 'cribl-okta-rest-io.okta-api'
+    filter: __packsource == 'cribl-okta-rest-io.okta-api-logs'
     clones: []
     output: default
   - id: default
     name: default
     final: true
     disabled: false
-    pipeline: devnull
+    pipeline: main
     description: ""
     enableOutputExpression: false
     outputExpression: null
     filter: "true"
     clones: []
-    output: devnull
+    output: default

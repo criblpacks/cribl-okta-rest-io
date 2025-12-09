@@ -1,5 +1,6 @@
-Okta-API:
+Okta API Ruleset:
   lib: custom
+  minRawLength: 256
   description: Event breakers for Okta logs
   rules:
     - condition: "true"

@@ -3,7 +3,9 @@
 
 ## About this Pack
 
-This pack is built as a complete SOURCE + DESTINATION solution (identified by the IO prefix). Data collection and delivery happen entirely within the pack's context, eliminating the need to connect it to globally defined Sources and Destinations. This collector based pack is designed to handle JSON data collected from the Okta System Log API endpoint. The JSON is parsed and the timestamp normalized from the proper field within each event. The pack offers two different optional methods of reduction:
+This pack is built as a complete SOURCE + DESTINATION solution (identified by the IO prefix). Data collection and delivery happen entirely within the pack's context, eliminating the need to connect it to globally defined Sources and Destinations. 
+
+This collector based pack is designed to handle JSON data collected from the Okta System Log API endpoint. The JSON is parsed and the timestamp normalized from the proper field within each event. The pack offers two different optional methods of reduction:
 
 1. Drop, Sample, or Suppress based off of eventType. You can target individual eventTypes by modifying the provided okta-event-types.csv lookup under Knowledge > Lookups.
 2. Remove nested null value fields.
@@ -18,43 +20,19 @@ The pack also currently includes three forms of output formats:
 
 The Okta Rest IO pack ingests events from the Okta System Log API, normalizing the data for use with your configured destinations.
 
-
 * This pack is configured by default to use the Worker Group's Default Destination.
 
 * To use the Default Destination: No changes are required. The pack will route the data to the destination currently set as the Default on the Worker Group.
 
 * To use a different Destination: You must update the pack's routes to specify your desired Destination.
 
-* For immediate functionality without requiring pack route filter expression modifications, every bundled Source within this pack adds a hidden field: __packsource==’cribl-okta-rest-io.okta-api’. This field allows for seamless routing based on the pack source.
+### Configure the Rest Collector Source
 
-### Source + Destination Configuration
-To use this pack as a completely bundled source and destination pack, follow these steps:
+Navigate to Knowledge > Variables and update the following variables for your environment
 
-1. Configure the Pack
-This pack includes several functions that can help reduce events. Please make sure you evaluate the functions before enabling it to ensure vital data is not missed.
-
-Additionally, several output formats are available to be selected. Please only enable one output, as enabling multiple may break the output formatting.
-
-2. Configure the Rest Collector Source
-- Enter the Cribl Okta Rest IO pack > Sources > Collectors > REST. 
-- Select the OKTA-API source 
-- Navigate to the Collect URL field > Replace the REPLACE_OKTA_DOMAIN in the collect URL with your OKTA endpoint's domain
-- Navigate to the Collect Headers field > Next to the Authorization, replace the Value of YOUR_OKTA_BEARER_TOKEN with your OKTA Bearer token. Do not remove SSWS as it is required. There should also be a space between SSWS and the bearer token as it is shown in the field. 
-
-3. Configure your Destination/Update Pack Routes
-To ensure proper data routing, you must make a choice: retain the current setting to use the Default Destination defined by your Worker Group, or define a new Destination directly inside this pack and adjust the pack's route accordingly.
-
-4. Commit and Deploy
-Once everything is configured, Commit & Deploy your end to end telemetry stream. 
-
-### Processing Only Pack Configuration (Only use pack's routes + pipelines)
-If you prefer to use the pack's processing logic only (e.g., the collector JSON and event breaker) with external, globally defined Sources and Destinations, follow these steps:
-
-1. Clone the Pack with a new Pack ID.
-
-2. Remove the bundled IO Source and IO Destination objects.
-
-3. Connect the remaining processing pipeline via your Global Routes page.
+- `okta_domain`: Your Okta Domain
+- `okta_token`: Your Okta Token
+- Commit and Deploy - Once everything is configured, Commit & Deploy to enable data collection. 
 
 ## Upgrades
 
@@ -62,8 +40,12 @@ Upgrading certain Cribl Packs using the same Pack ID can have unintended consequ
 
 ## Release Notes
 
-### Version 0.1.0
-Initial release
+### Version 1.1.0
+- Added variables for collector sourcetype
+- Adding Collectors and Event Breaker to Pack
+
+### Version 1.0.0
+- Initial release
 
 ## Contributing to the Pack
 
