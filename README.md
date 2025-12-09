@@ -21,18 +21,21 @@ The pack also currently includes three forms of output formats:
 The Okta Rest IO pack ingests events from the Okta System Log API, normalizing the data for use with your configured destinations.
 
 * This pack is configured by default to use the Worker Group's Default Destination.
-
 * To use the Default Destination: No changes are required. The pack will route the data to the destination currently set as the Default on the Worker Group.
-
 * To use a different Destination: You must update the pack's routes to specify your desired Destination.
 
 ### Configure the Rest Collector Source
 
-Navigate to Knowledge > Variables and update the following variables for your environment
+Navigate to Knowledge > Variables and update the following for your environment:
 
 - `okta_domain`: Your Okta Domain
 - `okta_token`: Your Okta Token
-- Commit and Deploy - Once everything is configured, Commit & Deploy to enable data collection. 
+
+### Configure your Destination/Update Pack Routes
+To ensure proper data routing, you must make a choice: retain the current setting to use the Default Destination defined by your Worker Group, or define a new Destination directly inside this pack and adjust the pack's route accordingly.
+
+### Commit and Deploy
+Once everything is configured, perform a Commit & Deploy to enable data collection (if changes have been made).
 
 ## Upgrades
 
@@ -41,6 +44,9 @@ Upgrading certain Cribl Packs using the same Pack ID can have unintended consequ
 ## Release Notes
 
 ### Version 1.1.0
+- Collector configuraration is now done via variables
+
+### Version 1.0.1
 - Added variables for collector sourcetype
 - Adding Collectors and Event Breaker to Pack
 
